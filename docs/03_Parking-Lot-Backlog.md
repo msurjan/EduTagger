@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| **Versión** | 0.3 |
+| **Versión** | 0.4 |
 | **Fecha** | 2026-06-03 |
 | **Propósito** | Capturar ideas nuevas SIN meterlas al MVP. Anti-scope-creep (anti-Q5). |
 
@@ -54,6 +54,24 @@
 **Por qué NO en el MVP:** reintroduce IA (recortada del MVP, doc 04); scope nuevo; el ciclo de pórfido (doc 05) no lo necesita para probar la hipótesis.
 
 **Gate:** MVP validado + decisión de abrir capa de IA (junto con Entrada 2).
+
+---
+
+## ENTRADA 4 — Admin / Repositorio histórico de muestras de referencia
+**Estado:** PARQUEADO (V2 — plataforma de datos).
+
+**Idea:** un panel de administración propio para crear y gestionar "muestras base / muestras tipo" — la combinación canónica de litología/alteración de cada yacimiento. Repositorio histórico de Graiph.
+
+**Por qué es valioso:** ES el moat de datos (doc 00 §4) y el activo de Graiph; es también lo que el motor de similitud de Seba (Entrada 2) compararía a futuro.
+
+**Por qué NO en el MVP:**
+- No prueba la hipótesis del MVP (¿funciona el ciclo de aprendizaje?). Eso se valida con UN yacimiento.
+- Admin completo = login + CRUD + gestión de imágenes + permisos = scope grande que corre la fecha de nov.
+- Superficie de seguridad nueva = más formas de romper (anti-Q5).
+
+**Interino para el MVP:** gestionar contenido vía `seed`/migración + validador revisando contenido directo. Sin admin para un solo yacimiento.
+
+**Gate:** MVP validado + necesidad real de 2-3 yacimientos con producción de contenido recurrente.
 
 ---
 
