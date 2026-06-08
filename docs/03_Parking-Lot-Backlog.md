@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |---|---|
-| **Versión** | 0.4 |
+| **Versión** | 0.5 |
 | **Fecha** | 2026-06-03 |
 | **Propósito** | Capturar ideas nuevas SIN meterlas al MVP. Anti-scope-creep (anti-Q5). |
 
@@ -72,6 +72,32 @@
 **Interino para el MVP:** gestionar contenido vía `seed`/migración + validador revisando contenido directo. Sin admin para un solo yacimiento.
 
 **Gate:** MVP validado + necesidad real de 2-3 yacimientos con producción de contenido recurrente.
+
+---
+
+## ENTRADA 5 — Atlas macro→micro (mapa de franjas + navegación multi-yacimiento)
+**Estado:** PARQUEADO (V2 — plataforma).
+
+**Idea:** mapa gigante interactivo con las franjas metalogénicas → zoom a yacimientos con su contexto → cada yacimiento con sus tipos de roca, fotos y sondajes tipo.
+
+**Por qué es valioso:** es la cáscara de navegación natural del producto y conecta con el repositorio de referencia (Entrada 4).
+
+**Por qué NO en el MVP:** el MVP tiene UN yacimiento. Un atlas multi-franja/multi-yacimiento es scope grande que corre la fecha de nov. En el MVP, "lo macro" = una pantalla simple de contexto.
+
+**Gate:** MVP validado + varios yacimientos publicados.
+
+---
+
+## ENTRADA 6 — Base de conocimiento desde PDFs (PDF→MD)
+**Estado:** PARQUEADO (V2).
+
+**Idea:** subir bibliografía en PDF, convertirla a MD y usarla como base de conocimiento del producto.
+
+**Por qué NO en el MVP:** feature de gestión de contenido = scope; y **copyright (R4)**: papers/libros de terceros no se pueden hospedar. Material propio del CEO u open-access, sí.
+
+**Interino MVP:** referencias = enlaces y citas, no archivos hospedados.
+
+**Gate:** MVP validado + revisión de derechos del material a hospedar.
 
 ---
 

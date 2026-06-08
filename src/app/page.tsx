@@ -15,21 +15,22 @@ interface Marker {
 
 export default function Home() {
   const [isInStudyMode, setIsInStudyMode] = useState<boolean>(false);
-  const [currentStep, setCurrentStep] = useState<number>(1); // 1 to 5, 6 is Cierre
+  const [currentStep, setCurrentStep] = useState<number>(1); // 1 to 5
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
+  const [activeImageIndexStep3, setActiveImageIndexStep3] = useState<number>(0);
   const [markers, setMarkers] = useState<Marker[]>([]);
   const [activeMarkerId, setActiveMarkerId] = useState<string | null>(null);
+  const [showRubric, setShowRubric] = useState<boolean>(false);
   
-  // States for subsequent steps
-  const [reflections, setReflections] = useState<string>("");
-  const [inferenceAnswer, setInferenceAnswer] = useState<string>("");
+  // States for final steps
+  const [inferenceAnswer, setInferenceAnswer] = useState<string>( "");
   const [selfScore, setSelfScore] = useState<Record<number, number>>({});
 
   const yacimiento: Yacimiento = mockYacimiento;
 
-  // Handle image click to place marker (Step 1)
+  // Handle image click to place marker (Step 5)
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (currentStep !== 1) return;
+    if (currentStep !== 5) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -78,7 +79,14 @@ export default function Home() {
             </p>
             <button
               className={styles.button}
-              onClick={() => setIsInStudyMode(true)}
+              onClick={() => {
+                setIsInStudyMode(true);
+                setCurrentStep(1);
+                setMarkers([]);
+                setInferenceAnswer("");
+                setSelfScore({});
+                setShowRubric(false);
+              }}
               style={{ marginTop: "1rem" }}
             >
               Comenzar Ciclo de Aprendizaje
@@ -109,28 +117,28 @@ export default function Home() {
             <div className={styles.stepsGrid}>
               <div className={styles.stepCard}>
                 <span className={styles.stepNumber}>1</span>
-                <h3 className={styles.stepName}>Observar</h3>
-                <p className={styles.stepDesc}>Ver fotos del testigo real en alta definición y marcar lo visible.</p>
+                <h3 className={styles.stepName}>Contexto Macro</h3>
+                <p className={styles.stepDesc}>Ubicación regional de la franja metalogénica y marco general.</p>
               </div>
               <div className={styles.stepCard}>
                 <span className={styles.stepNumber}>2</span>
-                <h3 className={styles.stepName}>Reflexionar</h3>
-                <p className={styles.stepDesc}>Identificar patrones repetitivos y variaciones geológicas.</p>
+                <h3 className={styles.stepName}>Conceptualización</h3>
+                <p className={styles.stepDesc}>Conectar con la teoría geológica y modelos de formación.</p>
               </div>
               <div className={styles.stepCard}>
                 <span className={styles.stepNumber}>3</span>
-                <h3 className={styles.stepName}>Conceptualizar</h3>
-                <p className={styles.stepDesc}>Conectar lo observado con la teoría y modelos metalogénicos.</p>
+                <h3 className={styles.stepName}>Observación Guiada</h3>
+                <p className={styles.stepDesc}>Ver las muestras reales de sondaje y leer sus rasgos diagnósticos.</p>
               </div>
               <div className={styles.stepCard}>
                 <span className={styles.stepNumber}>4</span>
-                <h3 className={styles.stepName}>Discriminar</h3>
-                <p className={styles.stepDesc}>Comparar con rocas confundibles (look-alikes) curadas a mano.</p>
+                <h3 className={styles.stepName}>Discriminación</h3>
+                <p className={styles.stepDesc}>Comparar visualmente con rocas confundibles (look-alikes).</p>
               </div>
               <div className={styles.stepCard}>
                 <span className={styles.stepNumber}>5</span>
-                <h3 className={styles.stepName}>Experimentar</h3>
-                <p className={styles.stepDesc}>Resolver ejercicios de inferencia y evaluar con rúbricas.</p>
+                <h3 className={styles.stepName}>Descripción e Inferencia</h3>
+                <p className={styles.stepDesc}>Marcar rasgos del testigo, responder el ejercicio y evaluar.</p>
               </div>
             </div>
           </section>
@@ -157,12 +165,11 @@ export default function Home() {
         {/* Stepper Navigation */}
         <div className={studyStyles.stepper}>
           {[
-            { num: 1, label: "Observar" },
-            { num: 2, label: "Reflexionar" },
-            { num: 3, label: "Conceptualizar" },
-            { num: 4, label: "Discriminar" },
-            { num: 5, label: "Inferir" },
-            { num: 6, label: "Cierre" },
+            { num: 1, label: "Contexto Macro" },
+            { num: 2, label: "Conceptualización" },
+            { num: 3, label: "Observación Guiada" },
+            { num: 4, label: "Discriminación" },
+            { num: 5, label: "Descripción e Inferencia" },
           ].map((s, idx) => (
             <React.Fragment key={s.num}>
               {idx > 0 && <div className={studyStyles.stepSeparator} />}
@@ -189,237 +196,75 @@ export default function Home() {
         </div>
       </header>
 
-      {/* STEP 1: OBSERVAR */}
+      {/* PASO 1: CONTEXTO MACRO */}
       {currentStep === 1 && (
-        <div className={studyStyles.workspace}>
-          <div className={studyStyles.leftColumn}>
-            {/* Main Interactive Viewer */}
-            <div className={studyStyles.viewerCard}>
-              <div className={studyStyles.viewerHeader}>
-                <span className={studyStyles.viewerTitle}>
-                  Muestra {activeImageIndex + 1}: {yacimiento.sets[activeImageIndex].etiqueta_publica}
-                </span>
-                <span className={studyStyles.placeholderBadge}>
-                  ⚠️ Imagen de Referencia (Placeholder)
-                </span>
+        <div className={studyStyles.workspace} style={{ gridTemplateColumns: "1fr" }}>
+          <div className={studyStyles.viewerCard} style={{ padding: "3rem 2rem", gap: "2rem", maxWidth: "800px", margin: "2rem auto", width: "100%" }}>
+            <div style={{ textAlign: "center", width: "100%" }}>
+              <span className={studyStyles.placeholderBadge} style={{ marginBottom: "0.75rem" }}>Paso 1: Macro Contexto</span>
+              <h2 style={{ fontSize: "1.8rem", fontWeight: "800", marginBottom: "0.5rem" }}>Ubicación Geológica Regional</h2>
+              <p style={{ color: "var(--text-muted)", fontSize: "0.95rem" }}>
+                Comenzamos el estudio localizando el yacimiento a nivel tectónico y de franja metalogénica.
+              </p>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", width: "100%", marginTop: "1rem" }}>
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--border-color)", borderRadius: "12px", padding: "1.5rem" }}>
+                <h3 style={{ color: "var(--accent-secondary)", fontSize: "1.1rem", marginBottom: "0.75rem" }}>Franja Metalogénica</h3>
+                <p style={{ fontSize: "0.95rem", lineHeight: "1.6" }}>{yacimiento.franja_metalogenica}</p>
+                <div style={{ marginTop: "1rem", display: "inline-flex", padding: "0.25rem 0.75rem", background: "rgba(6, 182, 212, 0.1)", border: "1px solid rgba(6, 182, 212, 0.2)", borderRadius: "4px", fontSize: "0.75rem", fontWeight: "600", color: "var(--accent-secondary)" }}>
+                  📍 {yacimiento.region_mvp}
+                </div>
               </div>
 
-              <div className={studyStyles.imageArea} onClick={handleImageClick}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={yacimiento.sets[activeImageIndex].url}
-                  alt={yacimiento.sets[activeImageIndex].etiqueta_publica}
-                  className={studyStyles.witnessImage}
-                />
-                <div className={studyStyles.imageOverlay}>
-                  {currentImageMarkers.map((marker, index) => {
-                    const globalIndex = markers.findIndex((m) => m.id === marker.id) + 1;
-                    return (
-                      <div
-                        key={marker.id}
-                        className={`${studyStyles.markerPin} ${
-                          activeMarkerId === marker.id ? studyStyles.markerPinActive : ""
-                        }`}
-                        style={{ left: `${marker.x}%`, top: `${marker.y}%` }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setActiveMarkerId(marker.id);
-                        }}
-                      >
-                        {globalIndex}
-                      </div>
-                    );
-                  })}
-                </div>
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--border-color)", borderRadius: "12px", padding: "1.5rem" }}>
+                <h3 style={{ color: "var(--accent-secondary)", fontSize: "1.1rem", marginBottom: "0.75rem" }}>Hospedamiento Regional</h3>
+                <p style={{ fontSize: "0.95rem", lineHeight: "1.6", color: "var(--text-secondary)" }}>
+                  Las rocas se hospedan en una secuencia volcánica-sedimentaria del Paleozoico superior–Triásico inferior con metamorfismo previo. Su estructura está controlada por fallas del sistema Domeyko.
+                </p>
               </div>
             </div>
 
-            {/* Thumbnail Strip */}
-            <div className={studyStyles.thumbnailStrip}>
-              {yacimiento.sets.map((item, idx) => (
-                <div
-                  key={item.id_imagen}
-                  className={`${studyStyles.thumbnailCard} ${
-                    activeImageIndex === idx ? studyStyles.thumbnailCardActive : ""
-                  }`}
-                  onClick={() => {
-                    setActiveImageIndex(idx);
-                    setActiveMarkerId(null);
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.url}
-                    alt={item.etiqueta_publica}
-                    className={studyStyles.thumbnailImg}
-                  />
-                  <span className={studyStyles.thumbnailLabel}>Muestra {idx + 1}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className={studyStyles.instructions}>
-              <strong>Instrucciones del Paso 1:</strong> Observa en detalle cada una de las 6 muestras de testigos arriba.
-              Haz clic directamente sobre cualquier parte de la roca para colocar un marcador y registrar una observación de textura, color o rasgo (por ejemplo: &quot;vetilla dorada&quot;, &quot;parche rosado&quot; o &quot;matriz verdosa&quot;).
-              Intenta describir lo que ves <em>antes de nombrar teóricamente</em> los minerales.
-            </div>
-          </div>
-
-          {/* Sidebar Observations */}
-          <div className={studyStyles.rightColumn}>
-            <div className={studyStyles.sidebarHeader}>
-              <h2 className={studyStyles.sidebarTitle}>Tus Observaciones</h2>
-              <span className={studyStyles.markerCount}>{markers.length} marcadores</span>
-            </div>
-
-            <div className={studyStyles.markerList}>
-              {markers.length === 0 ? (
-                <div className={studyStyles.emptyState}>
-                  <span>📍</span>
-                  <p>Aún no has agregado marcadores.</p>
-                  <p style={{ color: "var(--text-muted)", fontSize: "0.8rem" }}>
-                    Haz clic en el testigo de roca de la izquierda para comenzar a registrar tus observaciones.
-                  </p>
-                </div>
-              ) : (
-                markers.map((marker, idx) => (
-                  <div
-                    key={marker.id}
-                    className={`${studyStyles.markerItem} ${
-                      activeMarkerId === marker.id ? studyStyles.markerItemActive : ""
-                    }`}
-                    onClick={() => setActiveMarkerId(marker.id)}
-                  >
-                    <div className={studyStyles.markerItemHeader}>
-                      <span className={studyStyles.markerBadge}>
-                        📍 Marcador {idx + 1} (Muestra {marker.imageIndex + 1})
-                      </span>
-                      <button
-                        className={studyStyles.deleteBtn}
-                        onClick={(e) => deleteMarker(marker.id, e)}
-                        title="Borrar observación"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      className={studyStyles.markerInput}
-                      placeholder="Describe qué color, textura o mineral ves aquí..."
-                      value={marker.description}
-                      onChange={(e) => updateMarkerDescription(marker.id, e.target.value)}
-                      autoFocus={activeMarkerId === marker.id && marker.description === ""}
-                    />
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div className={studyStyles.actionRow}>
+            <div className={studyStyles.actionRow} style={{ width: "100%", borderTop: "1px solid var(--border-color)", paddingTop: "1.5rem", marginTop: "1rem" }}>
               <button
                 className={studyStyles.secondaryBtn}
                 onClick={() => setIsInStudyMode(false)}
               >
-                Volver
+                Volver al Home
               </button>
               <button
                 className={studyStyles.primaryBtn}
                 onClick={() => setCurrentStep(2)}
-                disabled={markers.length === 0}
-                style={{ opacity: markers.length === 0 ? 0.6 : 1 }}
               >
-                Continuar al Paso 2 →
+                Continuar a Conceptualización →
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* STEP 2: REFLEXIONAR */}
+      {/* PASO 2: CONCEPTUALIZACIÓN */}
       {currentStep === 2 && (
         <div className={studyStyles.workspace}>
           <div className={studyStyles.leftColumn}>
             <div className={studyStyles.viewerCard} style={{ padding: "2rem", alignItems: "flex-start", gap: "1.5rem" }}>
-              <h2 style={{ fontSize: "1.3rem", fontWeight: "700" }}>Paso 2 — Observación Reflexiva</h2>
+              <h2 style={{ fontSize: "1.4rem", fontWeight: "700" }}>Paso 2 — Conceptualización Abstracta</h2>
               <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)" }}>
-                A partir de las muestras que has examinado y tus marcadores, reflexiona sobre el conjunto:
-              </p>
-              
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", width: "100%" }}>
-                <label style={{ fontSize: "0.9rem", fontWeight: "600", color: "var(--accent-secondary)" }}>
-                  ¿Qué patrones visuales se repiten entre las diferentes muestras? ¿Qué elementos cambian a lo largo del testigo?
-                </label>
-                <textarea
-                  className={studyStyles.markerInput}
-                  style={{ minHeight: "150px", resize: "vertical" }}
-                  placeholder="Escribe aquí tu reflexión sobre los rasgos y patrones observados..."
-                  value={reflections}
-                  onChange={(e) => setReflections(e.target.value)}
-                />
-              </div>
-              
-              <div className={studyStyles.instructions} style={{ width: "100%" }}>
-                <strong>Tip pedagógico:</strong> Fíjate en cómo la densidad de las vetillas varía entre muestras, y si los parches de color rosado (alteración potásica) se asocian a algún mineral dorado específico.
-              </div>
-            </div>
-          </div>
-
-          <div className={studyStyles.rightColumn}>
-            <div className={studyStyles.sidebarHeader}>
-              <h2 className={studyStyles.sidebarTitle}>Resumen de tus marcas</h2>
-            </div>
-            <div className={studyStyles.markerList} style={{ maxHeight: "350px" }}>
-              {markers.map((m, idx) => (
-                <div key={m.id} style={{ fontSize: "0.85rem", padding: "0.5rem 0", borderBottom: "1px solid var(--border-color)" }}>
-                  <strong>📍 Muestra {m.imageIndex + 1}:</strong> {m.description || "(sin descripción)"}
-                </div>
-              ))}
-            </div>
-
-            <div className={studyStyles.actionRow}>
-              <button className={studyStyles.secondaryBtn} onClick={() => setCurrentStep(1)}>
-                ← Atrás
-              </button>
-              <button
-                className={studyStyles.primaryBtn}
-                onClick={() => setCurrentStep(3)}
-                disabled={reflections.trim().length === 0}
-                style={{ opacity: reflections.trim().length === 0 ? 0.6 : 1 }}
-              >
-                Continuar al Paso 3 →
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* STEP 3: CONCEPTUALIZAR */}
-      {currentStep === 3 && (
-        <div className={studyStyles.workspace}>
-          <div className={studyStyles.leftColumn}>
-            <div className={studyStyles.viewerCard} style={{ padding: "2rem", alignItems: "flex-start", gap: "1.5rem" }}>
-              <h2 style={{ fontSize: "1.4rem", fontWeight: "700" }}>Paso 3 — Conceptualización Abstracta</h2>
-              <p style={{ fontSize: "0.95rem" }}>
-                Conectemos tus observaciones con el modelo científico (metalogénesis).
+                Revisemos la teoría metalogenética y el modelo químico de formación antes de analizar la roca.
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", width: "100%" }}>
                 <div>
                   <h3 style={{ fontSize: "1.1rem", color: "var(--accent-secondary)", marginBottom: "0.5rem" }}>Modelo Genético (Metalogénesis)</h3>
-                  <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>{yacimiento.modelo_genetico}</p>
-                </div>
-
-                <div>
-                  <h3 style={{ fontSize: "1.1rem", color: "var(--accent-secondary)", marginBottom: "0.5rem" }}>Contexto Regional y Estructural</h3>
-                  <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)" }}>{yacimiento.contexto_regional}</p>
+                  <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>{yacimiento.modelo_genetico}</p>
                 </div>
 
                 <div>
                   <h3 style={{ fontSize: "1.1rem", color: "var(--accent-secondary)", marginBottom: "0.5rem" }}>Zonación Mineral y Ensambles</h3>
-                  <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: "0.75rem" }}>
-                    Los minerales cambian térmicamente según la cercanía al núcleo de calor:
+                  <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: "0.75rem", lineHeight: "1.6" }}>
+                    Los minerales hidrotermales se asocian en halos concéntricos alrededor del núcleo porfírico:
                   </p>
-                  <ul style={{ paddingLeft: "1.25rem", fontSize: "0.9rem", color: "var(--text-secondary)", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+                  <ul style={{ paddingLeft: "1.25rem", fontSize: "0.9rem", color: "var(--text-secondary)", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                     {yacimiento.minerales_presentes.map((m, idx) => (
                       <li key={idx}>
                         <strong>{m.tipo}:</strong> {m.minerales.join(", ")} {m.descripcion || ""}
@@ -433,35 +278,98 @@ export default function Home() {
 
           <div className={studyStyles.rightColumn}>
             <div className={studyStyles.sidebarHeader}>
-              <h2 className={studyStyles.sidebarTitle}>Referencias del Yacimiento</h2>
+              <h2 className={studyStyles.sidebarTitle}>Glosario de Alteraciones</h2>
             </div>
             
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-                Puedes complementar el estudio con estos recursos externos y cartografías del Sernageomin:
-              </p>
-              {yacimiento.material_referencia.map((ref, idx) => (
-                <a
-                  key={idx}
-                  href={ref.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "block",
-                    padding: "0.75rem",
-                    background: "var(--bg-tertiary)",
-                    border: "1px solid var(--border-color)",
-                    borderRadius: "8px",
-                    textDecoration: "none",
-                    color: "var(--accent-secondary)",
-                    fontSize: "0.85rem",
-                    fontWeight: "600",
-                    textAlign: "center"
-                  }}
-                >
-                  🔗 {ref.titulo}
-                </a>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", fontSize: "0.85rem" }}>
+              {yacimiento.rasgos_diagnosticos.map((r, idx) => (
+                <div key={idx} style={{ padding: "0.5rem 0", borderBottom: "1px solid var(--border-color)" }}>
+                  <strong style={{ color: "var(--accent-warning)" }}>{r.nombre}:</strong>
+                  <p style={{ color: "var(--text-muted)", marginTop: "0.15rem", lineHeight: "1.4" }}>{r.descripcion}</p>
+                </div>
               ))}
+            </div>
+
+            <div className={studyStyles.actionRow} style={{ marginTop: "auto" }}>
+              <button className={studyStyles.secondaryBtn} onClick={() => setCurrentStep(1)}>
+                ← Atrás
+              </button>
+              <button className={studyStyles.primaryBtn} onClick={() => setCurrentStep(3)}>
+                Continuar al Paso 3 →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PASO 3: OBSERVACIÓN GUIADA */}
+      {currentStep === 3 && (
+        <div className={studyStyles.workspace}>
+          <div className={studyStyles.leftColumn}>
+            {/* Viewer for Guided observation */}
+            <div className={studyStyles.viewerCard}>
+              <div className={studyStyles.viewerHeader}>
+                <span className={studyStyles.viewerTitle}>
+                  Muestra {activeImageIndexStep3 + 1}: {yacimiento.sets[activeImageIndexStep3].etiqueta_publica}
+                </span>
+                <span className={studyStyles.placeholderBadge}>
+                  ⚠️ Imagen de Referencia (Placeholder)
+                </span>
+              </div>
+
+              <div className={studyStyles.imageArea} style={{ cursor: "default" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={yacimiento.sets[activeImageIndexStep3].url}
+                  alt={yacimiento.sets[activeImageIndexStep3].etiqueta_publica}
+                  className={studyStyles.witnessImage}
+                />
+              </div>
+            </div>
+
+            {/* Thumbnail Strip */}
+            <div className={studyStyles.thumbnailStrip}>
+              {yacimiento.sets.map((item, idx) => (
+                <div
+                  key={item.id_imagen}
+                  className={`${studyStyles.thumbnailCard} ${
+                    activeImageIndexStep3 === idx ? studyStyles.thumbnailCardActive : ""
+                  }`}
+                  onClick={() => setActiveImageIndexStep3(idx)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.url}
+                    alt={item.etiqueta_publica}
+                    className={studyStyles.thumbnailImg}
+                  />
+                  <span className={studyStyles.thumbnailLabel}>Muestra {idx + 1}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className={studyStyles.instructions}>
+              <strong>Instrucciones del Paso 3:</strong> Revisa el set de testigos utilizando el panel lateral para leer la **descripción geológica oficial** de cada muestra. Esto te ayudará a familiarizarte con las texturas del stockwork, las alteraciones potásicas y la zonación antes de realizar tu propio marcado interactivo en el paso final.
+            </div>
+          </div>
+
+          <div className={studyStyles.rightColumn}>
+            <div className={studyStyles.sidebarHeader}>
+              <h2 className={studyStyles.sidebarTitle}>Descripción Oficial</h2>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--border-color)", padding: "1.25rem", borderRadius: "8px" }}>
+                <span style={{ fontSize: "0.75rem", color: "var(--accent-secondary)", fontWeight: "700", textTransform: "uppercase" }}>
+                  Muestra {activeImageIndexStep3 + 1}
+                </span>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: "700", margin: "0.25rem 0 0.75rem 0" }}>
+                  {yacimiento.sets[activeImageIndexStep3].etiqueta_publica}
+                </h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: "1.6" }}>
+                  {yacimiento.sets[activeImageIndexStep3].descripcion}
+                </p>
+              </div>
             </div>
 
             <div className={studyStyles.actionRow} style={{ marginTop: "auto" }}>
@@ -476,12 +384,13 @@ export default function Home() {
         </div>
       )}
 
-      {/* STEP 4: DISCRIMINAR (LOOK-ALIKES) */}
+      {/* PASO 4: DISCRIMINACIÓN (LOOK-ALIKES) */}
       {currentStep === 4 && (
         <div className={studyStyles.workspace} style={{ gridTemplateColumns: "1fr" }}>
           <div className={studyStyles.viewerCard} style={{ padding: "2rem", gap: "2rem" }}>
             <div style={{ textAlign: "center" }}>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "700" }}>Paso 4 — Entrenamiento de Discriminación</h2>
+              <span className={studyStyles.placeholderBadge} style={{ marginBottom: "0.5rem" }}>Paso 4: Discriminación</span>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: "700" }}>Entrenamiento de Discriminación</h2>
               <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", marginTop: "0.5rem" }}>
                 ¿Cómo distinguimos el Pórfido Cuprífero de rocas que lucen muy similares (Look-alikes)?
               </p>
@@ -533,25 +442,82 @@ export default function Home() {
         </div>
       )}
 
-      {/* STEP 5: INFERIR / EXPERIMENTACIÓN ACTIVA */}
-      {currentStep === 5 && (
+      {/* PASO 5: DESCRIPCIÓN E INFERENCIA (EJERCICIO INTERACTIVO FINAL) */}
+      {currentStep === 5 && !showRubric && (
         <div className={studyStyles.workspace}>
           <div className={studyStyles.leftColumn}>
-            <div className={studyStyles.viewerCard} style={{ padding: "2rem", alignItems: "flex-start", gap: "1.5rem" }}>
-              <h2 style={{ fontSize: "1.4rem", fontWeight: "700" }}>Paso 5 — Ejercicio de Inferencia Inductiva</h2>
-              <div
-                style={{
-                  background: "rgba(99, 102, 241, 0.05)",
-                  borderLeft: "4px solid var(--accent-primary)",
-                  padding: "1.25rem",
-                  borderRadius: "0 8px 8px 0",
-                  width: "100%",
-                  marginBottom: "1rem"
-                }}
-              >
-                <p style={{ fontSize: "1rem", color: "var(--text-primary)", fontWeight: "500", lineHeight: "1.6" }}>
-                  {yacimiento.consigna}
-                </p>
+            {/* Interactive Image Viewer */}
+            <div className={studyStyles.viewerCard}>
+              <div className={studyStyles.viewerHeader}>
+                <span className={studyStyles.viewerTitle}>
+                  Muestra {activeImageIndex + 1}: {yacimiento.sets[activeImageIndex].etiqueta_publica}
+                </span>
+                <span className={studyStyles.placeholderBadge}>
+                  ⚠️ Imagen de Referencia (Placeholder)
+                </span>
+              </div>
+
+              <div className={studyStyles.imageArea} onClick={handleImageClick}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={yacimiento.sets[activeImageIndex].url}
+                  alt={yacimiento.sets[activeImageIndex].etiqueta_publica}
+                  className={studyStyles.witnessImage}
+                />
+                <div className={studyStyles.imageOverlay}>
+                  {currentImageMarkers.map((marker) => {
+                    const globalIndex = markers.findIndex((m) => m.id === marker.id) + 1;
+                    return (
+                      <div
+                        key={marker.id}
+                        className={`${studyStyles.markerPin} ${
+                          activeMarkerId === marker.id ? studyStyles.markerPinActive : ""
+                        }`}
+                        style={{ left: `${marker.x}%`, top: `${marker.y}%` }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveMarkerId(marker.id);
+                        }}
+                      >
+                        {globalIndex}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Thumbnail Strip */}
+            <div className={studyStyles.thumbnailStrip}>
+              {yacimiento.sets.map((item, idx) => (
+                <div
+                  key={item.id_imagen}
+                  className={`${studyStyles.thumbnailCard} ${
+                    activeImageIndex === idx ? studyStyles.thumbnailCardActive : ""
+                  }`}
+                  onClick={() => {
+                    setActiveImageIndex(idx);
+                    setActiveMarkerId(null);
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.url}
+                    alt={item.etiqueta_publica}
+                    className={studyStyles.thumbnailImg}
+                  />
+                  <span className={studyStyles.thumbnailLabel}>Muestra {idx + 1}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Inference Question area below image */}
+            <div className={studyStyles.viewerCard} style={{ padding: "1.5rem", alignItems: "flex-start", gap: "1rem", width: "100%" }}>
+              <h3 style={{ fontSize: "1.1rem", fontWeight: "700", color: "var(--accent-secondary)" }}>
+                Consigna del Ejercicio de Inferencia
+              </h3>
+              <div style={{ background: "rgba(99,102,241,0.03)", padding: "1rem", borderRadius: "8px", borderLeft: "4px solid var(--accent-primary)", width: "100%" }}>
+                <p style={{ fontSize: "0.95rem", lineHeight: "1.6" }}>{yacimiento.consigna}</p>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", width: "100%" }}>
@@ -560,8 +526,8 @@ export default function Home() {
                 </label>
                 <textarea
                   className={studyStyles.markerInput}
-                  style={{ minHeight: "180px", resize: "vertical" }}
-                  placeholder="Redacta tu respuesta geológica inductiva integrando lo que observaste en los testigos y lo revisado en el modelo genético..."
+                  style={{ minHeight: "150px", resize: "vertical" }}
+                  placeholder="Redacta tu respuesta detallada integrando tus observaciones en los testigos..."
                   value={inferenceAnswer}
                   onChange={(e) => setInferenceAnswer(e.target.value)}
                 />
@@ -569,29 +535,71 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Sidebar for Markers */}
           <div className={studyStyles.rightColumn}>
             <div className={studyStyles.sidebarHeader}>
-              <h2 className={studyStyles.sidebarTitle}>Glosario Geológico</h2>
-            </div>
-            
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", fontSize: "0.85rem" }}>
-              {yacimiento.rasgos_diagnosticos.map((r, idx) => (
-                <div key={idx} style={{ padding: "0.5rem 0", borderBottom: "1px solid var(--border-color)" }}>
-                  <strong style={{ color: "var(--accent-secondary)" }}>{r.nombre}:</strong>
-                  <p style={{ color: "var(--text-muted)", marginTop: "0.15rem" }}>{r.descripcion}</p>
-                </div>
-              ))}
+              <h2 className={studyStyles.sidebarTitle}>Observación del Testigo</h2>
+              <span className={studyStyles.markerCount}>{markers.length} marcas</span>
             </div>
 
-            <div className={studyStyles.actionRow}>
+            <div className={studyStyles.instructions} style={{ fontSize: "0.8rem", padding: "0.75rem" }}>
+              <strong>Instrucciones:</strong> Haz clic sobre la roca (izquierda) para colocar pines e identificar rasgos clave (colores, vetillas, alteraciones). Describe cada pin.
+            </div>
+
+            <div className={studyStyles.markerList}>
+              {markers.length === 0 ? (
+                <div className={studyStyles.emptyState} style={{ padding: "1rem" }}>
+                  <span>📍</span>
+                  <p>Sin marcadores aún.</p>
+                  <p style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
+                    Haz clic en el testigo de roca de la izquierda para agregar marcadores de texturas o minerales observados.
+                  </p>
+                </div>
+              ) : (
+                markers.map((marker, idx) => (
+                  <div
+                    key={marker.id}
+                    className={`${studyStyles.markerItem} ${
+                      activeMarkerId === marker.id ? studyStyles.markerItemActive : ""
+                    }`}
+                    onClick={() => setActiveMarkerId(marker.id)}
+                  >
+                    <div className={studyStyles.markerItemHeader}>
+                      <span className={studyStyles.markerBadge}>
+                        📍 Pin {idx + 1} (Muestra {marker.imageIndex + 1})
+                      </span>
+                      <button
+                        className={studyStyles.deleteBtn}
+                        onClick={(e) => deleteMarker(marker.id, e)}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      className={studyStyles.markerInput}
+                      placeholder="¿Qué ves en este punto?"
+                      value={marker.description}
+                      onChange={(e) => updateMarkerDescription(marker.id, e.target.value)}
+                      autoFocus={activeMarkerId === marker.id && marker.description === ""}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+
+            <div className={studyStyles.actionRow} style={{ marginTop: "auto" }}>
               <button className={studyStyles.secondaryBtn} onClick={() => setCurrentStep(4)}>
                 ← Atrás
               </button>
               <button
                 className={studyStyles.primaryBtn}
-                style={{ background: "var(--gradient-primary)", opacity: inferenceAnswer.trim().length === 0 ? 0.6 : 1 }}
-                onClick={() => setCurrentStep(6)}
-                disabled={inferenceAnswer.trim().length === 0}
+                onClick={() => setShowRubric(true)}
+                disabled={markers.length === 0 || inferenceAnswer.trim().length === 0}
+                style={{
+                  background: "var(--gradient-primary)",
+                  opacity: markers.length === 0 || inferenceAnswer.trim().length === 0 ? 0.6 : 1
+                }}
               >
                 Finalizar y Autoevaluar ✔
               </button>
@@ -600,8 +608,8 @@ export default function Home() {
         </div>
       )}
 
-      {/* STEP 6: CIERRE / EVALUACIÓN */}
-      {currentStep === 6 && (
+      {/* PASO 5: CIERRE / RÚBRICA Y AUTOEVALUACIÓN (SUB-FASE DE PASO 5) */}
+      {currentStep === 5 && showRubric && (
         <div className={studyStyles.workspace} style={{ gridTemplateColumns: "1fr 1fr" }}>
           {/* Left: Your Answer vs Model Answer */}
           <div className={studyStyles.leftColumn}>
@@ -611,21 +619,36 @@ export default function Home() {
               <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem", width: "100%" }}>
                 <div>
                   <h3 style={{ fontSize: "1rem", color: "var(--accent-primary)", marginBottom: "0.35rem" }}>Tu Respuesta de Inferencia</h3>
-                  <div style={{ background: "rgba(255, 255, 255, 0.03)", padding: "1rem", borderRadius: "8px", border: "1px solid var(--border-color)", maxHeight: "200px", overflowY: "auto" }}>
+                  <div style={{ background: "rgba(255, 255, 255, 0.03)", padding: "1rem", borderRadius: "8px", border: "1px solid var(--border-color)", maxHeight: "150px", overflowY: "auto" }}>
                     <p style={{ fontSize: "0.9rem", whiteSpace: "pre-line" }}>{inferenceAnswer}</p>
                   </div>
                 </div>
 
                 <div>
+                  <h3 style={{ fontSize: "1rem", color: "var(--accent-primary)", marginBottom: "0.35rem" }}>Tus Marcadores de Testigo</h3>
+                  <div style={{ background: "rgba(255, 255, 255, 0.03)", padding: "1rem", borderRadius: "8px", border: "1px solid var(--border-color)", maxHeight: "120px", overflowY: "auto" }}>
+                    {markers.length === 0 ? (
+                      <p style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>No colocaste marcadores.</p>
+                    ) : (
+                      markers.map((m, idx) => (
+                        <div key={m.id} style={{ fontSize: "0.85rem", padding: "0.25rem 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                          <strong>📍 Muestra {m.imageIndex + 1}:</strong> {m.description || "(sin descripción)"}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                <div>
                   <h3 style={{ fontSize: "1rem", color: "var(--accent-success)", marginBottom: "0.35rem" }}>Clave Geológica de Referencia</h3>
-                  <div style={{ background: "rgba(16, 185, 129, 0.05)", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.2)", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                    <p style={{ fontSize: "0.9rem" }}>
+                  <div style={{ background: "rgba(16, 185, 129, 0.05)", padding: "1rem", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.2)", display: "flex", flexDirection: "column", gap: "0.65rem" }}>
+                    <p style={{ fontSize: "0.85rem" }}>
                       <strong>Alteraciones diagnósticas:</strong> {yacimiento.clave_respuesta.alteracion_primaria} / {yacimiento.clave_respuesta.alteracion_sobreimpuesta}
                     </p>
-                    <p style={{ fontSize: "0.9rem" }}>
+                    <p style={{ fontSize: "0.85rem" }}>
                       <strong>Proceso hidrotermal:</strong> {yacimiento.clave_respuesta.proceso}
                     </p>
-                    <p style={{ fontSize: "0.9rem" }}>
+                    <p style={{ fontSize: "0.85rem" }}>
                       <strong>Zonación periférica:</strong> {yacimiento.clave_respuesta.periferia}
                     </p>
                   </div>
@@ -689,7 +712,7 @@ export default function Home() {
               <div className={studyStyles.actionRow}>
                 <button
                   className={studyStyles.secondaryBtn}
-                  onClick={() => setCurrentStep(5)}
+                  onClick={() => setShowRubric(false)}
                 >
                   ← Atrás
                 </button>
@@ -700,9 +723,9 @@ export default function Home() {
                     setIsInStudyMode(false);
                     setCurrentStep(1);
                     setMarkers([]);
-                    setReflections("");
                     setInferenceAnswer("");
                     setSelfScore({});
+                    setShowRubric(false);
                   }}
                 >
                   Finalizar Estudio ✔

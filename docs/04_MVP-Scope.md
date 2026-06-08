@@ -22,7 +22,7 @@ Si no se valida, no procede. (Métrica = doc 02 §D.)
 1. **Un (1) tipo:** pórfido cuprífero chileno. Ficha 100% (doc 01) + permiso escrito.
 2. **Contenido metalogenético del pórfido:** contexto, franja, modelo genético, rasgos diagnósticos. Redactado por practicantes, **validado**. Capa macro (franja/ocurrencias) puede apoyarse en **fuentes públicas Sernageomin** (verificar términos de uso/redistribución).
 3. **Set curado:** ~6–8 imágenes reales representativas, etiquetadas solo por tipo; capa privada separada.
-4. **Ciclo de aprendizaje (doc 05):** Kolb sobre el pórfido — observar → reflexionar → conceptualizar → **discriminar look-alikes (manual)** → inferir. Evaluación por rúbrica / profe (**sin IA**).
+4. **Flujo de aprendizaje (doc 05), orden macro→micro:** contexto macro → conceptualización (equipar) → observación guiada → discriminación → **descripción/inferencia del testigo como capstone**. Evaluación por rúbrica / profe (**sin IA**).
 5. **Integración con el flujo del Tagger** (describir/marcar → ciclo). **El Tagger NO se modifica.**
 6. **Instrumentación de uso** (adopción de la cohorte).
 7. **Material de referencia:** enlaces/citas. **No hospedar** (R4).
